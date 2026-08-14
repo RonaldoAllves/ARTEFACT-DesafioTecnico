@@ -1,59 +1,112 @@
 import sqlite3
 import csv
 
-def criarBanco(PASTA_CSV, conexao):
-    try:
-        for arquivo in PASTA_CSV.glob("*.csv"):
-            nome_tabela = arquivo.stem.split(" - ")[-1]
 
-            with open(arquivo, "r", encoding="utf-8-sig", newline="") as f:
-                leitor = csv.reader(f)
+tipos_colunas = {
+    # categories
+    "category_id": "INTEGER",
 
-                cabecalho = next(leitor)
+    # customers
+    "customer_id": "INTEGER",
 
-                # Remove espaços dos nomes das colunas
-                cabecalho = [col.strip() for col in cabecalho]
+    # order_items
+    "order_id": "INTEGER",
+    "quantity": "INTEGER",
+    "product_id": "INTEGER",
 
-                colunas = ", ".join(
-                    f'"{col}" TEXT'
-                    for col in cabecalho
-                )
+    # orders
+    "order_id": "INTEGER",
+    "customer_id": "INTEGER",
+    "order_date": "TEXT",
+    "total_brl": "REAL",
+    "estimated_delivery": "TEXT",
 
-                conexao.execute(
-                    f'DROP TABLE IF EXISTS "{nome_tabela}"'
-                )
+    # products
+    "product_id": "INTEGER",
+    "price_brl": "REAL",
+    "category_id": "INTEGER",
+    "stock_quantity": "INTEGER",
+    "created_at": "TEXT",
 
-                conexao.execute(
-                    f'CREATE TABLE "{nome_tabela}" ({colunas})'
-                )
-
-                placeholders = ", ".join(
-                    "?" for _ in cabecalho
-                )
-
-                sql_insert = (
-                    f'INSERT INTO "{nome_tabela}" '
-                    f'VALUES ({placeholders})'
-                )
-
-                conexao.executemany(
-                    sql_insert,
-                    leitor
-                )
-
-        conexao.commit()
-
-    finally:
-        conexao.close()
+    # promotions
+    "promotion_id": "INTEGER",
+    "product_id": "INTEGER",
+    "discount_percent": "REAL",
+    "is_active": "INTEGER"
+}
 
 
-def consultarSQL(sql, conexao):   
-    try:
-        cursor = conexao.execute(sql)
-        colunas = [descricao[0] for descricao in cursor.description]
-        resultados = cursor.fetchall()
+def converter_valor(valor, tipo):
+    if valor == "":
+        return None
 
-        return colunas, resultados
+    if tipo == "INTEGER":
+        return int(valor)
 
-    finally:
-        conexao.close()
+    if tipo == "REAL":
+        return float(valor.replace(",", "."))
+
+    return valor
+
+
+def criarBanco(PASTA_CSV, conexao):    
+    for arquivo in PASTA_CSV.glob("*.csv"):
+        nome_tabela = arquivo.stem.split(" - ")[-1]
+
+        with open(arquivo, "r", encoding="utf-8-sig", newline="") as f:
+            leitor = csv.reader(f)
+
+            cabecalho = next(leitor)
+
+            # Remove espaços dos nomes das colunas
+            cabecalho = [col.strip() for col in cabecalho]
+
+            colunas = ", ".join(
+                f'"{col}" {tipos_colunas.get(col, "TEXT")}'
+                for col in cabecalho
+            )
+
+            conexao.execute(
+                f'DROP TABLE IF EXISTS "{nome_tabela}"'
+            )
+
+            conexao.execute(
+                f'CREATE TABLE "{nome_tabela}" ({colunas})'
+            )
+
+            placeholders = ", ".join(
+                "?" for _ in cabecalho
+            )
+
+            sql_insert = (
+                f'INSERT INTO "{nome_tabela}" '
+                f'VALUES ({placeholders})'
+            )
+
+            dados = []
+
+            for linha in leitor:
+                linha_convertida = [
+                    converter_valor(
+                        valor,
+                        tipos_colunas.get(col, "TEXT")
+                    )
+                    for col, valor in zip(cabecalho, linha)
+                ]
+
+                dados.append(linha_convertida)
+
+            conexao.executemany(
+                sql_insert,
+                dados
+            )
+
+    conexao.commit()
+
+
+def consultarSQL(sql, conexao):
+    cursor = conexao.execute(sql)
+    colunas = [descricao[0] for descricao in cursor.description]
+    resultados = cursor.fetchall()
+
+    return colunas, resultados

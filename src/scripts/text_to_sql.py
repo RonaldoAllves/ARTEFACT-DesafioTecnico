@@ -65,6 +65,10 @@ ESQUEMA DO BANCO:
 Os tipos de status possíveis são:
 - products.status: 'active', 'discontinued', 'coming_soon'
 - orders.status: 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled'
+- promotions.is_active: 0, 1
+
+Os tipos de pagamento são:
+- orders.payment_method: 'pix', 'credit_6x', 'credit_12x', 'boleto', 'credit_3x', 'debit'
 
 EXEMPLO DE PERGUNTA E CONSULTA SQL (São exemplos reais):
 
