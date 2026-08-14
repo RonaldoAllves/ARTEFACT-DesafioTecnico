@@ -27,7 +27,7 @@ O código principal do projeto está localizado em:
 
 ./src/instrument_rag.ipynb
 
-O diretório ./test foi usado inicialmente para validar as etapas, esse diretório não é necessário, mas eu deixei porque representa a evolução das minhas ideias.
+O diretório ./test foi usado inicialmente para validar as etapas, esse diretório não é necessário, ele foi excluído, mas nos commits tem a evolução dele.
 
 O notebook contém toda a implementação do pipeline desenvolvido para o desafio técnico, incluindo:
 
