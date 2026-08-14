@@ -31,7 +31,6 @@ Ela possui informações sobre:
 - Garantia
 - Privacidade e proteção de dados
 
-Sempre escolha RAG quando a resposta depender de explicações, regras, procedimentos, políticas ou informações textuais.
 Exemplos:
 
 Pergunta: Qual é a política de troca?
@@ -87,7 +86,7 @@ Resposta: SQL
 
 ## HYBRID
 
-Escolha HYBRID somente quando for necessário consultar simultaneamente a documentação e o banco de dados.
+Escolha HYBRID quando for necessário consultar simultaneamente a documentação e o banco de dados.
 Exemplos:
 
 Pergunta: Quais produtos participam da promoção de Black Friday?
@@ -110,6 +109,26 @@ Resposta: HYBRID
 
 ------------------------------------------------------------
 
+## Perguntas com múltiplas intenções
+
+Uma pergunta pode conter mais de uma solicitação ou intenção.
+Nesses casos, analise CADA parte da pergunta separadamente.
+
+- Se uma parte exigir RAG e outra parte exigir SQL → HYBRID
+
+Exemplos:
+
+Pergunta: Qual o endereço da loja e vocês possuem bateria eletrônica?
+Resposta: HYBRID
+
+Pergunta: Qual o horário de funcionamento e quais violões estão disponíveis?
+Resposta: HYBRID
+
+Pergunta: Qual a política de troca e quais produtos estão em promoção?
+Resposta: HYBRID
+
+------------------------------------------------------------
+
 Pergunta do usuário:
 {query}
 
@@ -119,9 +138,10 @@ Regras importantes:
 
 - Nunca responda à pergunta do usuário.
 - Nunca explique sua decisão.
-- Nunca gere SQL.
+- Nunca gere a consulta SQL.
 - Nunca invente informações.
-- Retorne apenas UMA das palavras abaixo de acordo com as situações já descritas:
+- Na dúvida responda: HYBRID
+- Retorne apenas UMA das palavras abaixo de acordo com a pergunta do usuário:
 
 RAG
 SQL

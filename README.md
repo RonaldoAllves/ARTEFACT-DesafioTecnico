@@ -5,9 +5,7 @@
 
 ### Modelos Ollama Necessários
 
-```bash
-ollama pull qwen2.5-coder:7b      # LLM Principal (~5GB)
-```
+ollama pull qwen3:8b # LLM Principal
 
 ### Dependências Python
 
@@ -27,7 +25,9 @@ O código principal do projeto está localizado em:
 
 ./src/instrument_rag.ipynb
 
-O diretório ./test foi usado inicialmente para validar as etapas, esse diretório não é necessário, ele foi excluído, mas nos commits tem a evolução dele.
+Os resultados estão no diretório
+
+./exemplo_interacao
 
 O notebook contém toda a implementação do pipeline desenvolvido para o desafio técnico, incluindo:
 

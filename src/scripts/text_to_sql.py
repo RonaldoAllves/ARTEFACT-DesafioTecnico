@@ -62,6 +62,28 @@ Os dados são de uma loja de instrumentos musicais.
 ESQUEMA DO BANCO:
 {esquema_str}
 
+Exemplo de registros por cada tabela:
+
+categories
+category_id,name,description
+1,Guitarras,"Guitarras elétricas de todos os estilos, do rock ao jazz"
+
+customers
+customer_id,name,phone,email,city
+1,Lucas Mendes da Silva,(67) 99812-3456,lucas.mendes@jmail.com,Campo Grande
+
+order_items
+order_id,quantity,product_id
+1,1,93
+
+order_id,customer_id,order_date,status,total_brl,payment_method,tracking_code,estimated_delivery,notes
+1,3,2025-10-15,delivered,11499,pix,BRAB1234567BR,2025-10-25,
+17,15,2026-01-28,cancelled,689,pix,,,Pedido cancelado pelo cliente antes do processamento
+
+promotions
+promotion_id,product_id,discount_percent,description,is_active
+1,102,10,Black Friday,0
+
 Os tipos de status possíveis são:
 - products.status: 'active', 'discontinued', 'coming_soon'
 - orders.status: 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled'
@@ -76,7 +98,7 @@ PRIMEIRO EXEMPLO
 PERGUNTA DE EXEMPLO: "Quais são os instrumentos elétricos?"
 CONSULTA SQL DE EXEMPLO:
 
-SELECT p.* 
+SELECT p.name, p.description 
         FROM products p
         JOIN categories c ON p.category_id = c.category_id
         WHERE 
@@ -147,6 +169,8 @@ REGRAS:
 - Use somente tabelas e colunas presentes no esquema.
 - Gere apenas consultas SELECT.
 - Não faça INSERT, UPDATE, DELETE, DROP, ALTER ou CREATE.
+- Considere variações, sinônimos, singular/plural e termos equivalentes nas condições `LIKE`; por exemplo, para "teclado", considere também "teclados", "keyboard", "key" e termos relacionados.
+- Sempre agrupe entre parênteses todas as condições `OR` quando houver um filtro `AND`, garantindo que o filtro seja aplicado a todas as condições alternativas.
 
 SQL:
 """
